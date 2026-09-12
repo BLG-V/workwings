@@ -1,0 +1,48 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mawp"
+version = "0.1.0"
+description = "MAWP — 多 Agent 工作流平台（可安装通用内核 + SDK/App）"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "typer>=0.12.0",
+    "pydantic>=2.0",
+    "pydantic-settings>=2.0",
+    "pyyaml>=6.0",
+    "rich>=13.0",
+    "structlog>=24.0",
+    "httpx>=0.27",
+    "chromadb>=0.5.0",
+    "pathspec>=0.12.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-asyncio>=0.23",
+]
+web = [
+    "fastapi>=0.115.0",
+    "uvicorn[standard]>=0.30.0",
+    "python-multipart>=0.0.9",
+]
+
+[project.scripts]
+platform = "mawp.cli.main:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mawp"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"src/mawp/api/static" = "mawp/api/static"
+
+[tool.hatch.build.targets.sdist]
+packages = ["src/mawp"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]

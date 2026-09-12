@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <rect width="32" height="32" rx="8" fill="#0f172a"/>
+  <g transform="translate(3.5 3.5) scale(0.39)" stroke="#f8fafc" fill="none">
+    <circle cx="32" cy="32" r="28.5" stroke-width="3"/>
+    <path
+      d="M31 15.2C27.8 14.6 24.8 15.2 22.6 16.8C20.2 15.8 17.4 16.6 16.2 18.8C14.2 19.6 13.2 22 13.6 24.4C12.2 26.2 12.2 28.8 13.4 30.8C12.4 33 12.8 35.6 14.4 37.4C14.2 39.8 15.6 42.2 17.8 43.4C19 45.6 21.6 46.8 24.4 46.4C26.4 47.8 29 47.6 31 46.2C31.4 45.8 31.5 45.2 31.5 44.6V17.2C31.5 16.2 31.4 15.4 31 15.2Z"
+      stroke-width="2.4"
+      stroke-linejoin="round"
+      stroke-linecap="round"
+    />
+    <path d="M18.8 22.4C21.6 20.8 25 21.2 27.8 23" stroke-width="2" stroke-linecap="round"/>
+    <path d="M17.2 28.2C20.4 26.6 24.2 27 27.4 29" stroke-width="2" stroke-linecap="round"/>
+    <path d="M18.4 34.4C21.4 33 24.6 33.4 27.4 35.4" stroke-width="2" stroke-linecap="round"/>
+    <path d="M34 23.6C37.6 21 41.2 26.2 44.8 23.6C48.2 21.2 51.2 25 54.2 22.8" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M34 32C37.6 29.4 41.2 34.6 44.8 32C48.2 29.6 51.2 33.4 54.2 31.2" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M34 40.4C37.6 37.8 41.2 43 44.8 40.4C48.2 38 51.2 41.8 54.2 39.6" stroke-width="2.4" stroke-linecap="round"/>
+    <circle cx="32.2" cy="32" r="1.5" fill="#f8fafc" stroke="none"/>
+  </g>
+</svg>

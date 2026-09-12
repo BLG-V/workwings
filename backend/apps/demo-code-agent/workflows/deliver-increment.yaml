@@ -1,0 +1,74 @@
+# 增量期短链：跳过 planner / requirement / review / ship
+# coding → frontend → testing → (debug 最多 2 轮) → end
+# 任务列表来自 params.tasks（phase_subtasks），不需要再规划。
+
+id: demo-code-agent-deliver-increment
+name: Demo Code Agent · Increment (coding + frontend + smoke)
+version: "0.1.0"
+entry: start
+default_loop_max: 4
+
+params:
+  goal: "incremental phase"
+  pass_on_attempt: 1
+  review_status: pass
+  project_mode: false
+  frontend_dir: "apps/demo-code-agent/frontend"
+  node_max_retries: 2
+  node_retry_delay: 2.0
+  debug_max_attempts: 2
+  self_heal: true
+  heal_max_rounds: 1
+  heal_on_review_blocking: false
+
+nodes:
+  - id: start
+    type: start
+
+  - id: coding
+    type: agent
+    agent: coding
+    input: {}
+
+  - id: frontend
+    type: agent
+    agent: frontend
+    input:
+      frontend_dir: "${params.frontend_dir}"
+
+  - id: testing
+    type: agent
+    agent: testing
+    input: {}
+
+  - id: check_test
+    type: condition
+
+  - id: debug
+    type: agent
+    agent: debug
+    input:
+      note: "repair from testing then retest; log=${nodes.testing.outputs.log_summary}"
+
+  - id: end
+    type: end
+
+edges:
+  - from: start
+    to: coding
+  - from: coding
+    to: frontend
+  - from: frontend
+    to: testing
+  - from: testing
+    to: check_test
+  - from: check_test
+    to: debug
+    when: "nodes.testing.outputs.passed == false"
+  - from: check_test
+    to: end
+    when: default
+  - from: debug
+    to: testing
+    loop: true
+    max_traversals: 2

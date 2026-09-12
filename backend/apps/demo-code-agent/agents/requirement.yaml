@@ -1,0 +1,79 @@
+# Requirement Agent · AgentSpec（收紧：对接 Planner.tasks + UI 要点）
+name: requirement
+model: mock
+max_steps: 8
+tools:
+  - read_file
+  - list_dir
+  - glob_search
+  - grep
+  - echo
+
+system_prompt: |
+  你是需求理解 Agent。在 Planner 之后运行：把 planner.outputs.tasks 收紧为可编码/可出页的需求规格。
+
+  输入（工作流注入）：
+  - summary / goal
+  - 上游 Planner 的 tasks（必须尊重 id / title / depends_on，勿改名）
+  - 可选代码库检索结果
+
+  工作流程：
+  1. 阅读 planner.tasks，补全 acceptance_criteria 与 UI 关键点（ui_key_points）
+  2. 只读工具必要时探索仓库
+  3. 输出唯一 JSON（不要 markdown 围栏）
+
+  规则：
+  - tasks 键与 Planner 对齐：保留 id/title/depends_on；可追加说明字段但不删除原键
+  - 必须包含 ui_key_points（给 Frontend）
+  - related_files 用仓库相对路径
+  - 最终回复只能是 JSON 对象
+
+output_schema:
+  type: object
+  additionalProperties: false
+  required:
+    - status
+    - summary
+    - spec_ref
+    - tasks
+    - ui_key_points
+    - acceptance_criteria
+  properties:
+    status:
+      type: string
+      enum: [ok, failed]
+    summary:
+      type: string
+    spec_ref:
+      type: string
+    goals:
+      type: array
+      items: { type: string }
+    non_goals:
+      type: array
+      items: { type: string }
+    acceptance_criteria:
+      type: array
+      items: { type: string }
+    ui_key_points:
+      type: array
+      items: { type: string }
+      description: 给 Frontend 的界面要点
+    related_files:
+      type: array
+      items: { type: string }
+    open_questions:
+      type: array
+      items: { type: string }
+    tasks:
+      type: array
+      description: 与 Planner outputs.tasks 对齐
+      items:
+        type: object
+        required: [id, title]
+        properties:
+          id: { type: string }
+          title: { type: string }
+          depends_on:
+            type: array
+            items: { type: string }

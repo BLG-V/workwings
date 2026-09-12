@@ -1,0 +1,125 @@
+# deliver · UC-07 骨架（A 侧引擎 + mock Agent）
+#
+# 图：
+#   start → planner → coding → testing → check_test
+#                                      ├─ fail → debug → testing  (loop 回边)
+#                                      └─ default → review → check_review
+#                                                           ├─ blocking → human_review → ship
+#                                                           └─ default → ship → end
+#
+# 审查 blocking 与节点失败由引擎 SelfHealPolicy 自动回 coding/debug，满轮次后再 human_review。
+# 字段契约见 docs/w4-ad-deliver-yaml-align.md（与 D 冻结）
+#
+# 常用 params：
+#   pass_on_attempt: 1=首测通过；2=先 fail 再经 debug 回环后通过
+#   review_status: pass | blocking
+
+id: deliver
+name: Deliver Skeleton (Planner / Test-Debug / Review / Ship)
+version: "0.2.0"
+entry: start
+default_loop_max: 8
+
+params:
+  goal: "UC-07 deliver skeleton"
+  pass_on_attempt: 1
+  review_status: pass
+  node_max_retries: 3
+  node_retry_delay: 2.0
+  debug_max_attempts: 5
+  self_heal: true
+  heal_max_rounds: 3
+  heal_on_review_blocking: true
+
+nodes:
+  - id: start
+    type: start
+
+  - id: planner
+    type: agent
+    agent: planner
+    input:
+      tasks:
+        - id: T1
+          title: "implement feature from ${params.goal}"
+          depends_on: []
+
+  - id: coding
+    type: agent
+    agent: coding
+    input: {}
+
+  - id: testing
+    type: agent
+    agent: testing
+    input: {}
+
+  - id: check_test
+    type: condition
+
+  - id: debug
+    type: agent
+    agent: debug
+    input:
+      note: "fix failures then retest"
+
+  - id: review
+    type: agent
+    agent: review
+    input: {}
+
+  - id: check_review
+    type: condition
+
+  - id: human_review
+    type: human_checkpoint
+    reason: "Review blocking（blocking_count=${nodes.review.outputs.blocking_count}），确认是否仍进入 Ship？"
+    allowed:
+      - approve
+      - reject
+      - input
+
+  - id: ship
+    type: agent
+    agent: ship
+    input:
+      delivery_notes: "Ship ready for ${params.goal} — manual push/merge only"
+
+  - id: end
+    type: end
+
+edges:
+  - from: start
+    to: planner
+  - from: planner
+    to: coding
+  - from: coding
+    to: testing
+  - from: testing
+    to: check_test
+
+  # Testing fail → Debug → Retest（显式回边）
+  - from: check_test
+    to: debug
+    when: "nodes.testing.outputs.passed == false"
+  - from: check_test
+    to: review
+    when: default
+  - from: debug
+    to: testing
+    loop: true
+    max_traversals: 3
+
+  # Review blocking 不直达 Ship：先 human；通过则 default → ship
+  - from: review
+    to: check_review
+  - from: check_review
+    to: human_review
+    when: "nodes.review.outputs.status == 'blocking'"
+  - from: check_review
+    to: ship
+    when: default
+  - from: human_review
+    to: ship
+  - from: ship
+    to: end

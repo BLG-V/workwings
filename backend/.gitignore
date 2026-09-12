@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+.agent/
+agent.config.yaml
+.mawp/
+mawp.config.yaml
+.env
+.pytest_cache/
+.coverage
+htmlcov/

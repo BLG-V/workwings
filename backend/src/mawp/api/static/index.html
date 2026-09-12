@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Code Agent — Goal Workflow</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+  <header class="header">
+    <div class="header-inner">
+      <h1>AI Code Agent</h1>
+      <p class="subtitle">Goal Workflow 进度面板</p>
+      <div class="workspace" id="workspace">加载中…</div>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-head">
+        <h2>工作流</h2>
+        <button type="button" id="btn-refresh" class="btn-ghost">刷新</button>
+      </div>
+      <ul id="workflow-list" class="workflow-list"></ul>
+    </aside>
+
+    <section class="content">
+      <div id="empty-state" class="empty-state">
+        <p>请选择左侧工作流查看六步进度</p>
+      </div>
+
+        <div id="workflow-detail" class="workflow-detail hidden">
+        <div class="detail-header">
+          <h2 id="wf-title">—</h2>
+          <span id="wf-slug" class="badge">—</span>
+          <span id="wf-archived" class="badge badge-archived hidden">已归档</span>
+        </div>
+        <p id="wf-desc" class="wf-desc"></p>
+        <div id="loop-banner" class="loop-banner hidden"></div>
+        <div id="steps" class="steps steps-pipeline"></div>
+
+        <div class="issues-section">
+          <h3>Issue 卡片</h3>
+          <table class="issues-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>标题</th>
+                <th>状态</th>
+                <th>Review</th>
+                <th>QA</th>
+                <th>Approve</th>
+                <th>迭代</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="issues-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="issue-modal" class="modal">
+    <div class="modal-inner">
+      <button type="button" class="modal-close" id="modal-close" aria-label="关闭">×</button>
+      <h2 id="modal-title">Issue 详情</h2>
+      <div id="modal-body" class="modal-body"></div>
+    </div>
+  </dialog>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

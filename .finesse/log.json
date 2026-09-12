@@ -1,0 +1,38 @@
+[
+  {
+    "date": "2026-09-11",
+    "target": "src/pages/LandingPage/LandingPage.tsx",
+    "register": "product-landing",
+    "summary": "Reframed the landing page around WorkWings controlled workflow orchestration and the AgentFlow frontend plus WorkWings backend stack.",
+    "palette": "cold steel with blue green accent",
+    "motion": 3,
+    "density": 5
+  },
+  {
+    "date": "2026-09-12",
+    "target": "src/index.css, src/lib/theme.ts, src/components/AppSidebar.tsx, src/components/ThemeSwitcher.tsx, src/components/CoreFlowBar.tsx, src/components/PipelineFlowchart.tsx, src/pages/WorkflowEditorPage",
+    "register": "product-workbench",
+    "summary": "Replaced the previous dark SaaS-like pixel recolor with a WorkWings Pixel Control Room system: scenario-based themes, numbered operator rail, hard-edged workbench zones, offset signal blocks, workflow canvas treatment, execution panel treatment, and miniature console previews.",
+    "palette": "acid lime command, blue relay, magenta build, amber approval, mint watch, monochrome audit",
+    "motion": 2,
+    "density": 8
+  },
+  {
+    "date": "2026-09-11",
+    "target": "src/pages/LandingPage/LandingPage.tsx",
+    "register": "product-landing",
+    "summary": "Reframed the landing page around WorkWings controlled workflow orchestration and the AgentFlow frontend plus WorkWings backend stack.",
+    "palette": "cold steel with blue green accent",
+    "motion": 3,
+    "density": 5
+  },
+  {
+    "date": "2026-09-11",
+    "target": "src/components/ThemeSwitcher.tsx, src/pages/SettingsPage/SettingsPage.tsx",
+    "register": "product-workbench",
+    "summary": "Added six WorkWings pixel operator themes with hard edges, dark control-console surfaces, semantic execution colors, and shared theme previews.",
+    "palette": "pixel operator: acid lime, terminal green, neon magenta, amber forge, electric mint, monochrome",
+    "motion": 2,
+    "density": 8
+  }
+]

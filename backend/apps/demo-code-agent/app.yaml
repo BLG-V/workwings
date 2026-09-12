@@ -1,0 +1,132 @@
+# Demo Code Agent · 官方业务 App（W4 / AC-08）
+#
+# 八 Agent（交付主链）：
+#   planner → requirement → coding → frontend → testing ↔ debug → review → ship
+# （human_checkpoint 在 Review blocking 时插入，不是 Agent）
+#
+# AgentSpec 字段对齐 runtime：name / system_prompt / model / tools / max_steps / output_schema
+# deliver outputs 键名冻结：docs/w4-ad-deliver-yaml-align.md
+
+id: demo-code-agent
+name: Demo Code Agent
+version: "0.2.0"
+description: "8 Agent + 生成页：Planner→Requirement→Coding→Frontend→Testing↔Debug→Review→Ship"
+
+entry_workflow: workflows/deliver.yaml
+
+workflows:
+  - id: deliver
+    path: workflows/deliver.yaml
+    description: "AC-08：含 Frontend 与 Testing↔Debug 回边；Review blocking→human→Ship"
+
+agents:
+  - name: planner
+    system_prompt: |
+      你是任务规划 Agent。输出 tasks/status/count（键名冻结）。
+      只输出 JSON：{"tasks":[{"id","title","depends_on":[]}],"status":"ok","count":1}
+    model: mock
+    tools: [read_file, list_dir, grep, echo]
+    max_steps: 6
+    output_schema:
+      type: object
+      required: [tasks, status, count]
+      properties:
+        tasks: { type: array }
+        status: { type: string }
+        count: { type: integer }
+
+  - name: requirement
+    ref: agents/requirement.yaml
+
+  - name: coding
+    system_prompt: |
+      你是编码 Agent。按 tasks 改代码。
+      只输出 JSON：{"status":"ok","changed_files":[],"tasks_done":[]}
+    model: mock
+    tools: [read_file, write_file, edit_file, list_dir, glob_search, grep, echo]
+    max_steps: 12
+    output_schema:
+      type: object
+      required: [status, changed_files, tasks_done]
+      properties:
+        status: { type: string }
+        changed_files: { type: array, items: { type: string } }
+        tasks_done: { type: array, items: { type: string } }
+
+  - name: frontend
+    ref: agents/frontend.yaml
+
+  - name: testing
+    system_prompt: |
+      你是测试 Agent。键名冻结：passed/status/failures/log_summary/attempt。
+    model: mock
+    tools: [read_file, run_tests, run_linter, run_typecheck, run_terminal_cmd, echo]
+    max_steps: 8
+    output_schema:
+      type: object
+      required: [passed, status, failures, log_summary, attempt]
+      properties:
+        passed: { type: boolean }
+        status: { type: string, enum: [pass, fail] }
+        failures: { type: array, items: { type: string } }
+        log_summary: { type: string }
+        attempt: { type: integer }
+
+  - name: debug
+    system_prompt: |
+      你是调试 Agent。根据 testing.failures 给出修复说明后回到 Testing。
+      只输出 JSON：{"status":"ok","fixed":true,"based_on_failures":[],"note":""}
+    model: mock
+    tools: [read_file, grep, echo]
+    max_steps: 6
+    output_schema:
+      type: object
+      required: [status, fixed, based_on_failures, note]
+      properties:
+        status: { type: string }
+        fixed: { type: boolean }
+        based_on_failures: { type: array, items: { type: string } }
+        note: { type: string }
+
+  - name: review
+    system_prompt: |
+      你是审查 Agent。键名冻结：status/blocking_count/findings。
+    model: mock
+    tools: [read_file, grep, echo]
+    max_steps: 4
+    output_schema:
+      type: object
+      required: [status, blocking_count, findings]
+      properties:
+        status: { type: string, enum: [pass, blocking] }
+        blocking_count: { type: integer }
+        findings: { type: array }
+
+  - name: ship
+    system_prompt: |
+      你是交付 Agent。禁止自动 push/merge。键名冻结：status/delivery_notes/auto_push/auto_merge。
+    model: mock
+    tools: [read_file, echo]
+    max_steps: 3
+    output_schema:
+      type: object
+      required: [status, delivery_notes, auto_push, auto_merge]
+      properties:
+        status: { type: string }
+        delivery_notes: { type: string }
+        auto_push: { type: boolean }
+        auto_merge: { type: boolean }
+
+plugins_dir: plugins/
+
+policy:
+  inherit: platform
+
+authors:
+  - 孙浩铭
+  - mawp
+tags:
+  - demo
+  - w4
+  - ac-08
+  - code-agent

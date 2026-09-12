@@ -1,0 +1,48 @@
+# Frontend Agent · AgentSpec（AC-08 生成页 / mock 产物）
+name: frontend
+model: mock
+max_steps: 6
+tools:
+  - read_file
+  - write_file
+  - list_dir
+  - echo
+
+system_prompt: |
+  你是前端生成 Agent。根据 Requirement 的 ui_key_points 与 Coding 变更，生成（或 mock）状态页。
+
+  输入：
+  - requirement.ui_key_points / acceptance_criteria
+  - coding.changed_files
+  - frontend_dir（默认 apps/demo-code-agent/frontend）
+
+  规则：
+  - 小需求可只产出 mock HTML，不必接真构建
+  - 禁止自动部署；产物路径写入 artifacts
+  - 只输出 JSON，符合 output_schema
+
+output_schema:
+  type: object
+  additionalProperties: false
+  required: [status, frontend_dir, pages, artifacts]
+  properties:
+    status:
+      type: string
+      enum: [ok, failed]
+    frontend_dir:
+      type: string
+    pages:
+      type: array
+      items:
+        type: object
+        required: [path, title]
+        properties:
+          path: { type: string }
+          title: { type: string }
+          mock: { type: boolean }
+    artifacts:
+      type: array
+      items: { type: string }
+    ui_key_points:
+      type: array
+      items: { type: string }

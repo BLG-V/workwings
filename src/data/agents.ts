@@ -1,0 +1,148 @@
+// EXPORTS: IAgent, MOCK_AGENTS
+export interface IAgent {
+  id: string
+  name: string
+  icon: string
+  description: string
+  role: string
+  capabilities: string[]
+  model: string
+  category: 'analysis' | 'architecture' | 'development' | 'testing' | 'deployment' | 'document' | 'custom'
+  isTemplate?: boolean
+  templateName?: string
+  imageUrl: string
+}
+
+export const MOCK_AGENTS: IAgent[] = [
+  {
+    id: '1',
+    name: '需求分析Agent',
+    icon: '📋',
+    description: '深度拆解用户需求，输出结构化需求文档',
+    role: '资深产品经理，擅长需求挖掘与PRD撰写',
+    capabilities: ['需求拆解', '用户故事编写', '功能清单梳理', '优先级评估'],
+    model: 'GPT-4o',
+    category: 'analysis',
+    imageUrl: 'https://lf3-static.bytednsdoc.com/obj/eden-cn/ylcylz_fsph_ryhs/ljhwZthlaukjlkulzlp/feisuda/avatar/base/1.jpg',
+  },
+  {
+    id: '2',
+    name: '架构设计Agent',
+    icon: '🏗️',
+    description: '负责系统架构设计与技术方案选型',
+    role: '高级架构师，精通前后端架构与云原生设计',
+    capabilities: ['系统架构设计', '技术选型', '数据库设计', '接口规范定义'],
+    model: 'Claude 3.5',
+    category: 'architecture',
+    imageUrl: 'https://lf3-static.bytednsdoc.com/obj/eden-cn/ylcylz_fsph_ryhs/ljhwZthlaukjlkulzlp/feisuda/avatar/base/2.jpg',
+  },
+  {
+    id: '3',
+    name: '代码生成Agent',
+    icon: '💻',
+    description: '根据设计文档自动生成高质量代码',
+    role: '全栈开发工程师，精通React、Node.js、TypeScript',
+    capabilities: ['前端代码生成', '后端接口开发', '组件库搭建', '代码规范检查'],
+    model: 'GPT-4o',
+    category: 'development',
+    imageUrl: 'https://lf3-static.bytednsdoc.com/obj/eden-cn/ylcylz_fsph_ryhs/ljhwZthlaukjlkulzlp/feisuda/avatar/base/3.jpg',
+  },
+  {
+    id: '4',
+    name: '测试Agent',
+    icon: '🧪',
+    description: '自动化测试用例生成与质量保障',
+    role: '资深测试工程师，擅长自动化测试与质量管控',
+    capabilities: ['单元测试生成', '集成测试设计', '边界用例分析', '测试报告输出'],
+    model: '豆包4',
+    category: 'testing',
+    imageUrl: 'https://lf3-static.bytednsdoc.com/obj/eden-cn/ylcylz_fsph_ryhs/ljhwZthlaukjlkulzlp/feisuda/avatar/base/4.jpg',
+  },
+  {
+    id: '5',
+    name: '部署Agent',
+    icon: '🚀',
+    description: '自动化部署与运维配置',
+    role: 'DevOps工程师，精通CI/CD与容器化部署',
+    capabilities: ['Docker镜像构建', 'CI/CD流水线配置', '云服务部署', '环境监控'],
+    model: 'Claude 3.5',
+    category: 'deployment',
+    imageUrl: 'https://lf3-static.bytednsdoc.com/obj/eden-cn/ylcylz_fsph_ryhs/ljhwZthlaukjlkulzlp/feisuda/avatar/base/5.jpg',
+  },
+  {
+    id: '6',
+    name: '文档Agent',
+    icon: '📚',
+    description: '自动生成项目文档与API说明',
+    role: '技术文档工程师，擅长结构化文档编写',
+    capabilities: ['API文档生成', '项目README编写', '使用手册撰写', '文档版本管理'],
+    model: 'GPT-4o',
+    category: 'document',
+    imageUrl: 'https://lf3-static.bytednsdoc.com/obj/eden-cn/ylcylz_fsph_ryhs/ljhwZthlaukjlkulzlp/feisuda/avatar/base/6.jpg',
+  },
+  {
+    id: 'tpl-1',
+    name: '产品经理模板',
+    icon: '👨‍💼',
+    description: '专业产品经理角色模板，快速创建需求类Agent',
+    role: '资深产品经理，10年互联网产品经验',
+    capabilities: ['需求分析', '竞品调研', '原型设计', 'PRD撰写'],
+    model: 'GPT-4o',
+    category: 'custom',
+    isTemplate: true,
+    templateName: '产品经理',
+    imageUrl: 'https://lf3-static.bytednsdoc.com/obj/eden-cn/ylcylz_fsph_ryhs/ljhwZthlaukjlkulzlp/feisuda/avatar/base/7.jpg',
+  },
+  {
+    id: 'tpl-2',
+    name: '前端开发模板',
+    icon: '🎨',
+    description: '前端工程师角色模板，专注UI与交互开发',
+    role: '高级前端工程师，精通React/Vue生态',
+    capabilities: ['页面开发', '组件封装', '性能优化', '响应式适配'],
+    model: 'GPT-4o',
+    category: 'custom',
+    isTemplate: true,
+    templateName: '前端开发',
+    imageUrl: 'https://lf3-static.bytednsdoc.com/obj/eden-cn/ylcylz_fsph_ryhs/ljhwZthlaukjlkulzlp/feisuda/avatar/base/8.jpg',
+  },
+  {
+    id: 'tpl-3',
+    name: '后端开发模板',
+    icon: '⚙️',
+    description: '后端工程师角色模板，专注服务端开发',
+    role: '高级后端工程师，精通微服务架构',
+    capabilities: ['接口开发', '数据库设计', '性能调优', '安全加固'],
+    model: 'Claude 3.5',
+    category: 'custom',
+    isTemplate: true,
+    templateName: '后端开发',
+    imageUrl: 'https://lf3-static.bytednsdoc.com/obj/eden-cn/ylcylz_fsph_ryhs/ljhwZthlaukjlkulzlp/feisuda/avatar/base/9.jpg',
+  },
+  {
+    id: 'tpl-4',
+    name: '架构师模板',
+    icon: '🏛️',
+    description: '系统架构师角色模板，负责整体技术方案',
+    role: '首席架构师，精通分布式系统设计',
+    capabilities: ['架构设计', '技术选型', '方案评审', '风险评估'],
+    model: 'Claude 3.5',
+    category: 'custom',
+    isTemplate: true,
+    templateName: '架构师',
+    imageUrl: 'https://lf3-static.bytednsdoc.com/obj/eden-cn/ylcylz_fsph_ryhs/ljhwZthlaukjlkulzlp/feisuda/avatar/base/10.jpg',
+  },
+  {
+    id: 'tpl-5',
+    name: '测试工程师模板',
+    icon: '🔬',
+    description: '测试工程师角色模板，保障产品质量',
+    role: '资深测试工程师，精通各类测试方法',
+    capabilities: ['用例设计', '自动化测试', '性能测试', '缺陷管理'],
+    model: '豆包4',
+    category: 'custom',
+    isTemplate: true,
+    templateName: '测试工程师',
+    imageUrl: 'https://lf3-static.bytednsdoc.com/obj/eden-cn/ylcylz_fsph_ryhs/ljhwZthlaukjlkulzlp/feisuda/avatar/base/11.jpg',
+  },
+]

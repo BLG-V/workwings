@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>交付状态 · 内部工单台</title>
+  <link rel="stylesheet" href="shell.css" />
+  <link rel="stylesheet" href="theme.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-page="status" data-brand="内部工单台">
+  <div class="lz-app">
+    <aside class="lz-side">
+      <div class="lz-brand">
+        <span class="lz-brand-mark">&#9993;</span>
+        <span class="lz-brand-name" data-shell-brand>内部工单台</span>
+      </div>
+      <nav class="lz-nav" id="lz-nav" aria-label="主导航"></nav>
+      <div class="lz-side-foot">本地演示 · 无需登录</div>
+    </aside>
+
+    <div class="lz-stage">
+      <header class="lz-topbar">
+        <h1 class="lz-topbar-title" id="lz-topbar-title">交付状态</h1>
+        <div class="lz-topbar-meta">验收标准 · 人工确认</div>
+      </header>
+
+      <main class="lz-main">
+        <section class="lz-hero">
+          <div class="lz-hero-copy">
+            <span class="lz-eyebrow">内部工单台 · Delivery</span>
+            <h2>交付状态</h2>
+            <p>T1 → T2 主链已完成，Ship 前仅需本地人工确认。</p>
+          </div>
+        </section>
+
+        <section class="lz-card-grid">
+          <article class="lz-panel lz-status-card lz-status-ok">
+            <div class="lz-status-head">
+              <h3>T1 · 工单增删、状态切换与持久化</h3>
+              <span class="lz-badge lz-badge-ok">READY</span>
+            </div>
+            <p>创建工单（标题必填、备注可选，新工单置顶且默认「待处理」）、状态在「待处理 / 处理中 / 已完成」间切换、单条删除、localStorage 持久化（含异常兜底）。</p>
+          </article>
+
+          <article class="lz-panel lz-status-card lz-status-ok">
+            <div class="lz-status-head">
+              <h3>T2 · 前端页面与入口</h3>
+              <span class="lz-badge lz-badge-ok">READY</span>
+            </div>
+            <p>单页布局：标题、创建区（标题 + 可选备注 + 提交）、工单列表、状态样式区分、空态提示、状态计数与筛选，挂载到 index.html。</p>
+          </article>
+
+          <article class="lz-panel lz-status-card lz-status-block">
+            <div class="lz-status-head">
+              <h3>Ship · 人工确认</h3>
+              <span class="lz-badge lz-badge-block">BLOCKING</span>
+            </div>
+            <p>Ship 前需人工确认；本页面及编码产物不执行自动 push / merge。</p>
+          </article>
+        </section>
+
+        <section class="lz-panel">
+          <div class="lz-panel-head">
+            <h2>验收标准核对</h2>
+          </div>
+          <ul class="lz-checklist">
+            <li>能打开主页，不是空白页或 404</li>
+            <li>能创建至少 1 条工单，并立刻出现在列表顶部，默认「待处理」</li>
+            <li>能将工单状态切换为「处理中」和「已完成」，界面可区分</li>
+            <li>能删除工单，删除后不再出现在列表中</li>
+            <li>刷新页面后数据仍在（localStorage 即可）</li>
+            <li>无登录、无外部付费 API、无云端账号体系</li>
+            <li>交付说明写清如何本地打开（直接打开 index.html 或一条启动命令）</li>
+          </ul>
+        </section>
+
+        <section class="lz-panel lz-confirm">
+          <div class="lz-panel-head">
+            <h2>人工确认入口</h2>
+          </div>
+          <button id="confirmBtn" type="button" class="lz-btn lz-btn-teal">确认交付（本地记录）</button>
+          <p id="confirmNote" class="lz-confirm-note">点击后仅在浏览器本地记录确认状态，不触发任何 push / merge。</p>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script src="shell.js"></script>
+  <script>
+    (function () {
+      'use strict';
+      var btn = document.getElementById('confirmBtn');
+      var note = document.getElementById('confirmNote');
+      if (!btn || !note) return;
+      btn.addEventListener('click', function () {
+        try {
+          localStorage.setItem('it-ticket-desk-manual-confirm', new Date().toISOString());
+        } catch (err) {
+          // 忽略隐私模式下的本地存储异常
+        }
+        note.textContent = '已记录本地人工确认（' + new Date().toLocaleString() + '）。本操作不会 push / merge。';
+        note.classList.add('is-ok');
+      });
+    })();
+  </script>
+</body>
+</html>

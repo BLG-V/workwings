@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>内部工单台 · 本地 IT 工单</title>
+  <link rel="stylesheet" href="shell.css" />
+  <link rel="stylesheet" href="theme.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-page="tickets" data-brand="内部工单台">
+  <div class="lz-app">
+    <aside class="lz-side">
+      <div class="lz-brand">
+        <span class="lz-brand-mark">&#9993;</span>
+        <span class="lz-brand-name" data-shell-brand>内部工单台</span>
+      </div>
+      <nav class="lz-nav" id="lz-nav" aria-label="主导航"></nav>
+      <div class="lz-side-foot">本地演示 · 无需登录</div>
+    </aside>
+
+    <div class="lz-stage">
+      <header class="lz-topbar">
+        <h1 class="lz-topbar-title" id="lz-topbar-title">工单台</h1>
+        <div class="lz-topbar-meta">数据仅存于本机浏览器</div>
+      </header>
+
+      <main class="lz-main">
+        <section class="lz-hero">
+          <div class="lz-hero-copy">
+            <span class="lz-eyebrow">Local IT Helpdesk · 内部工单台</span>
+            <h2>内部工单台</h2>
+            <p>创建、查看、流转、删除工单；刷新页面数据不丢失。</p>
+          </div>
+          <div class="lz-hero-stat" aria-label="待处理工单数">
+            <strong id="hero-pending">0</strong>
+            <span>条待处理</span>
+          </div>
+        </section>
+
+        <section class="lz-card-grid" aria-label="功能入口">
+          <a class="lz-entry lz-entry-blue" href="#ticket-app">
+            <span class="lz-entry-tag">P0 · App</span>
+            <h3>工单台</h3>
+            <p>输入标题提交工单，新工单置顶且默认「待处理」。</p>
+          </a>
+          <a class="lz-entry lz-entry-teal" href="status.html">
+            <span class="lz-entry-tag">P1 · Delivery</span>
+            <h3>交付状态</h3>
+            <p>查看任务拆解、验收标准与人工确认入口。</p>
+          </a>
+        </section>
+
+        <section class="lz-panel" id="ticket-app">
+          <div class="lz-panel-head">
+            <h2>工单列表</h2>
+            <span class="lz-panel-count" id="ticket-count">共 0 条 · 待处理 0 条</span>
+          </div>
+
+          <form id="ticket-form" class="ticket-form" autocomplete="off">
+            <input
+              id="ticket-title"
+              type="text"
+              maxlength="200"
+              placeholder="工单标题，例如：笔记本无法联网"
+              aria-label="工单标题（必填）"
+              required
+            />
+            <div class="ticket-form-row">
+              <input
+                id="ticket-note"
+                type="text"
+                maxlength="500"
+                placeholder="备注（可选）"
+                aria-label="工单备注（可选）"
+              />
+              <button id="submit-btn" type="submit" class="lz-btn lz-btn-primary">提交</button>
+            </div>
+          </form>
+
+          <div class="filter-bar" id="filter-bar" role="group" aria-label="按状态筛选">
+            <button type="button" class="filter-btn active" data-filter="all">全部 <span data-filter-count>0</span></button>
+            <button type="button" class="filter-btn" data-filter="pending">待处理 <span data-filter-count>0</span></button>
+            <button type="button" class="filter-btn" data-filter="in_progress">处理中 <span data-filter-count>0</span></button>
+            <button type="button" class="filter-btn" data-filter="done">已完成 <span data-filter-count>0</span></button>
+          </div>
+
+          <ul id="ticket-list" class="ticket-list" aria-live="polite"></ul>
+          <p id="empty-state" class="empty-state">还没有工单</p>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <script src="shell.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

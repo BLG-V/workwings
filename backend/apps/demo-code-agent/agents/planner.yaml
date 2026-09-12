@@ -1,0 +1,40 @@
+# Planner Agent · AgentSpec（outputs 键名与 A 冻结一致）
+name: planner
+model: mock
+max_steps: 6
+tools:
+  - read_file
+  - list_dir
+  - grep
+  - echo
+
+system_prompt: |
+  你是任务规划 Agent（TaskPlanner）。输出可执行任务清单。
+
+  输出 JSON 键名必须包含（冻结）：
+  - tasks: [{id, title, depends_on}]
+  - status: ok | failed
+  - count: number
+
+  可在 tasks 项上增加可选字段，但不得删除上述键。
+
+output_schema:
+  type: object
+  required: [tasks, status, count]
+  properties:
+    tasks:
+      type: array
+      items:
+        type: object
+        required: [id, title]
+        properties:
+          id: { type: string }
+          title: { type: string }
+          depends_on:
+            type: array
+            items: { type: string }
+    status:
+      type: string
+      enum: [ok, failed]
+    count:
+      type: integer

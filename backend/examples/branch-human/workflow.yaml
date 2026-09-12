@@ -1,0 +1,75 @@
+# branch-human · W3 样例草案（D → A 对齐用）
+#
+# 图：start → prep(echo) → check_risk(condition)
+#        ├─ when: params.risk == 'high' → approve_deploy(human) → after_human(echo) → end
+#        └─ when: default               → auto_ok(echo) → end
+#
+# 字段约定（待 A 15 分钟对齐后冻结，见 docs/interfaces/w1-api-onepager.md §5）：
+# - condition：分支条件写在 edges[].when；恰好一条 when: default
+# - human_checkpoint：reason + allowed；恢复后写入 nodes.<id>.outputs.decision
+# - 模板语法沿用 W2：${params.x} / ${nodes.<id>.outputs.y}
+
+id: branch-human
+name: Branch + Human Checkpoint
+version: "0.1.0"
+entry: start
+params:
+  # 默认走高危人工路径，便于演示 UC-06；低危可传 --params risk=low（待 C 支持）
+  risk: high
+nodes:
+  - id: start
+    type: start
+
+  - id: prep
+    type: tool
+    tool: echo
+    input:
+      text: "prep risk=${params.risk}"
+
+  - id: check_risk
+    type: condition
+    # TODO(A): 节点体可无额外字段；选边完全由 outgoing edges 的 when 决定。
+    # 若希望节点内嵌 when/goto（旧 SRS demo-triage 风格），请改接口一页纸后再合代码。
+
+  - id: approve_deploy
+    type: human_checkpoint
+    reason: "高危操作确认：risk=high，是否继续部署？"
+    allowed:
+      - approve
+      - reject
+      - input
+    # TODO(A): resume 后约定 outputs，建议：
+    #   { "decision": "approve"|"reject"|"input", "input": "<用户输入或 null>" }
+
+  - id: auto_ok
+    type: tool
+    tool: echo
+    input:
+      text: "low risk — auto continue"
+
+  - id: after_human
+    type: tool
+    tool: echo
+    input:
+      text: "human decision=${nodes.approve_deploy.outputs.decision}"
+
+  - id: end
+    type: end
+
+edges:
+  - from: start
+    to: prep
+  - from: prep
+    to: check_risk
+  - from: check_risk
+    to: approve_deploy
+    when: "params.risk == 'high'"
+  - from: check_risk
+    to: auto_ok
+    when: default
+  - from: approve_deploy
+    to: after_human
+  - from: auto_ok
+    to: end
+  - from: after_human
+    to: end

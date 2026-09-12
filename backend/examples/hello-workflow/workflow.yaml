@@ -1,0 +1,21 @@
+id: hello
+name: Hello Workflow
+version: "0.1.0"
+entry: start
+params:
+  name: world
+nodes:
+  - id: start
+    type: start
+  - id: echo1
+    type: tool
+    tool: echo
+    input:
+      text: "hello ${params.name}"
+  - id: end
+    type: end
+edges:
+  - from: start
+    to: echo1
+  - from: echo1
+    to: end

@@ -1,0 +1,33 @@
+# 只验收：不生成代码、不进 Debug。失败也结束，把 passed 留给阶段判定。
+
+id: demo-code-agent-deliver-verify
+name: Demo Code Agent · Verify only
+version: "0.1.0"
+entry: start
+default_loop_max: 1
+
+params:
+  goal: "verify existing workspace"
+  pass_on_attempt: 1
+  project_mode: false
+  node_max_retries: 1
+  self_heal: false
+  heal_max_rounds: 0
+
+nodes:
+  - id: start
+    type: start
+
+  - id: testing
+    type: agent
+    agent: testing
+    input: {}
+
+  - id: end
+    type: end
+
+edges:
+  - from: start
+    to: testing
+  - from: testing
+    to: end

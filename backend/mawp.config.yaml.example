@@ -1,0 +1,130 @@
+# 复制为 mawp.config.yaml 并按需修改
+# MAWP 多 Agent 工作流平台
+workspace: "."
+
+llm:
+  # 真模型：openai + DeepSeek（需 DEEPSEEK_API_KEY）
+  # 离线演示：provider: mock
+  provider: "openai"
+  base_url: "https://api.deepseek.com"
+  model: "deepseek-v4-pro"
+  api_key_env: "DEEPSEEK_API_KEY"
+  max_tokens_per_run: 100000
+
+agents:
+  requirement:
+    max_tool_iterations: 10
+  coding:
+    max_retries: 3
+    max_tool_iterations: 15
+  testing:
+    timeout_seconds: 120
+    run_linter: true
+    run_typecheck: true
+    block_on_lint_errors: true
+    block_on_type_errors: true
+
+  review:
+    mode: "hybrid"           # rules | hybrid | llm
+    max_files_changed: 20
+    max_lines_per_file: 500
+    max_fix_retries: 3
+    max_iterations: 3
+    max_file_chars: 4000
+
+  # 按 Agent 分模型（核心生成 Pro，编排/需求/收尾 Flash）
+  models:
+    planner: deepseek-v4-flash
+    requirement: deepseek-v4-flash
+    coding: deepseek-v4-pro
+    frontend: deepseek-v4-pro
+    testing: deepseek-v4-flash
+    debug: deepseek-v4-pro
+    review: deepseek-v4-flash
+    ship: deepseek-v4-flash
+
+# 自愈选型：错误类型 + 轮次 + Agent；不全程升 Pro
+heal_models:
+  default: keep
+  by_category:
+    syntax_error: deepseek-v4-flash
+    import_error: deepseek-v4-flash
+    missing_file: deepseek-v4-flash
+    route_error: deepseek-v4-pro
+    build_error: deepseek-v4-pro
+    runtime_error: deepseek-v4-pro
+    review_blocking: deepseek-v4-pro
+    max_steps: deepseek-v4-pro
+    unknown: keep
+  escalate_after_round: 2
+  escalate_to: deepseek-v4-pro
+  failover:
+    - deepseek-v4-flash
+    - deepseek-v4-pro
+
+tools:
+  terminal:
+    timeout_seconds: 120
+    blocked_commands:
+      - "rm -rf"
+      - "git push --force"
+
+rag:
+  index_path: ".mawp/index"
+  exclude:
+    - "node_modules"
+    - "dist"
+    - ".git"
+    - ".mawp"
+  chunk_size_chars: 3200
+  top_k: 10
+  use_ast_chunking: true
+  hybrid_search: true
+  bm25_weight: 0.4
+  embedding:
+    provider: "local"
+    model: "text-embedding-3-small"
+    api_key_env: "OPENAI_API_KEY"
+
+security:
+  secret_patterns:
+    - "*.env"
+    - "**/secrets/**"
+  path_denylist:
+    - "/etc"
+
+audit:
+  retention_days: 90
+
+goal_workflow:
+  base_path: ".goal"
+  quick_track_max_files: 3
+
+gstack:
+  enabled: true
+  auto_fix_blocking: true
+
+autoresearch:
+  max_iterations: 25
+  token_budget: 500000
+  results_path: ".autoresearch/results.jsonl"
+  auto_commit_on_keep: true
+
+# 自愈选型：错误类型 + 轮次 + Agent 职责（不全程升 Pro）
+heal_models:
+  default: keep
+  by_category:
+    syntax_error: deepseek-v4-flash
+    import_error: deepseek-v4-flash
+    missing_file: deepseek-v4-flash
+    route_error: deepseek-v4-pro
+    build_error: deepseek-v4-pro
+    runtime_error: deepseek-v4-pro
+    review_blocking: deepseek-v4-pro
+    max_steps: deepseek-v4-pro
+    unknown: keep
+  escalate_after_round: 2
+  escalate_to: deepseek-v4-pro
+  failover:
+    - deepseek-v4-flash
+    - deepseek-v4-pro

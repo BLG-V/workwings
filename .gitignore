@@ -1,0 +1,43 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+.env
+.env.*
+!.env.example
+
+# MAWP backend
+backend/.venv
+backend/.mawp
+backend/workspaces
+backend/**/__pycache__
+backend/**/*.egg-info
+backend/mawp.config.yaml
+backend/.last_linzhi_run.json
+backend/data/auth/
+.mawp
+.goal
+.autoresearch
+
+# Local scratch / generated docs tooling
+.tmp-docx/
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
